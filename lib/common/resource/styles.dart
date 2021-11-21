@@ -319,6 +319,12 @@ class Styles {
     fontSize: 36.0,
   );
 
+  static const s32CobaltW500 = TextStyle(
+    color: Palette.cobalt,
+    fontWeight: FontWeight.w500,
+    fontSize: 32.0,
+  );
+
   static const s32SapphireW500 = TextStyle(
     color: Palette.sapphire,
     fontWeight: FontWeight.w500,

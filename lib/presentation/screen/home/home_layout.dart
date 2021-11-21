@@ -8,6 +8,7 @@ import 'package:sleep_care/common/util/locale_manager.dart';
 import 'package:sleep_care/common/util/url_launcher.dart';
 import 'package:sleep_care/domain/controller/home_controller.dart';
 import 'package:sleep_care/presentation/screen/about_us/about_us_screen.dart';
+import 'package:sleep_care/presentation/screen/rating/rating_screen.dart';
 import 'package:sleep_care/presentation/screen/statistics/statistics_screen.dart';
 import 'package:sleep_care/presentation/widget/default_app_bar.dart';
 
@@ -77,7 +78,7 @@ class _HomeLayoutState extends BaseLayoutState<HomeController, HomeLayout>
         children: [
           AboutUsScreen(),
           StatisticsScreen(),
-          Center(child: Text('${controller.currentIndex}')),
+          RatingScreen(),
           Center(child: Text('${controller.currentIndex}')),
         ],
       ),
