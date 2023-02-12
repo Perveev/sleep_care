@@ -51,7 +51,7 @@ class InfoBottomSheet extends StatelessWidget {
             RoundedButton(
               text: positiveButtonText ??
                   ''
-                      'ok(add translate)',
+                      'ok',
               onTap: onPositiveButtonTap ?? () => Navigator.pop(context),
             ),
             if (negativeButtonText?.isNotEmpty ?? false)

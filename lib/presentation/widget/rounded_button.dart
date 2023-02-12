@@ -32,7 +32,7 @@ class RoundedButton extends StatelessWidget {
         ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (states) {
-              final primary = color ?? Palette.bondiBlue;
+              final primary = color ?? Palette.mayaBlue;
               return states.contains(MaterialState.disabled)
                   ? primary.withOpacity(0.3)
                   : primary;

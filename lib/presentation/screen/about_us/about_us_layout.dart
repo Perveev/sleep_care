@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:sleep_care/common/base/base_layout.dart';
 import 'package:sleep_care/common/resource/drawables.dart';
@@ -13,8 +15,18 @@ class AboutUsLayout extends BaseLayout {
 
 class _AboutUsLayoutState
     extends BaseLayoutState<AboutUsController, AboutUsLayout> with UrlLauncher {
+
+  final Storage _localStorage = window.localStorage;
+  static const _access = 'access';
+
+  Future saveAccess(String id) async {
+    _localStorage[_access] = id;
+  }
+
+  String? getAccess()  => _localStorage[_access];
   @override
   Widget buildLayout(BuildContext context) {
+    final String fc =  getAccess() ?? '';
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(

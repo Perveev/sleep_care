@@ -10,6 +10,11 @@ extension ListExtension<T> on List<T> {
   }
 }
 
+extension ListMapExtension<E> on List<E> {
+  List<T> mapToList<T>(T Function(E e) toElement) =>
+      map<T>(toElement).toList(growable: false);
+}
+
 extension ListNullExtension<T> on List<T>? {
   List<T> get orEmpty => this == null ? List.empty(growable: false) : this!;
 

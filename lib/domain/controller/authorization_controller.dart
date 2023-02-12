@@ -1,33 +1,31 @@
 import 'package:sleep_care/common/util/phone_formatter.dart';
+import 'package:sleep_care/data/use_case/get_life_style_use_case.dart';
+import 'package:sleep_care/data/use_case/get_sleep_mode_use_case.dart';
+import 'package:sleep_care/data/use_case/registration_user_use_case.dart';
+import 'package:sleep_care/domain/model/life_style.dart';
+import 'package:sleep_care/domain/model/sleep_mode.dart';
+import 'package:sleep_care/domain/model/user.dart';
 
 import '../../common/base/base_controller.dart';
 
 class AuthorizationController extends BaseController {
   static const _emailRegex = r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$';
 
+  final GetLifeStyleUseCase _getLifeStyleUseCase;
+  final GetSleepModesUseCase _getSleepModesUseCase;
+  final RegistrationUserUseCase _registrationUserUseCase;
+
   int currentPage = 0;
   int currentActivity = 0;
-  int timeOfSleep = 0;
+  int currentSleepMode = 0;
+
   bool genderIsMale = true;
   bool genderIsFemale = false;
   bool checkBoxBool = false;
   bool showErrorCheckBox = false;
-  final List<String> activities = [
-    'text',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text',
-    'text',
-  ];
+
+  List<LifeStyle> activities = [];
+  List<SleepMode> sleepModes = [];
 
   String? lastNameError;
   String? firstNameError;
@@ -36,6 +34,29 @@ class AuthorizationController extends BaseController {
   String? phoneError;
   String? passwordError;
   String? hourOfSleepError;
+
+  AuthorizationController(
+    this._getLifeStyleUseCase,
+    this._getSleepModesUseCase,
+    this._registrationUserUseCase,
+  );
+
+  void loadData() {
+    execute<List<LifeStyle>>(
+      _getLifeStyleUseCase.getLifeStyles(),
+      onSuccess: (lifeStyles) {
+        activities = lifeStyles;
+        notifyListeners();
+      },
+    );
+    execute<List<SleepMode>>(
+      _getSleepModesUseCase.getSleepModes(),
+      onSuccess: (sleepModes) {
+        this.sleepModes = sleepModes;
+        notifyListeners();
+      },
+    );
+  }
 
   void showLastNameError(String errorText) {
     if (lastNameError == null) {
@@ -163,7 +184,7 @@ class AuthorizationController extends BaseController {
     required String password,
     required String phone,
     required String email,
-    required void Function() onUpdated,
+    required void Function() onSuccess,
   }) {
     if (age.isNotEmpty) {
       if (8 > (int.tryParse(age) ?? 0)) {
@@ -172,8 +193,8 @@ class AuthorizationController extends BaseController {
     } else {
       showAgeError('ВВедите коректный возвраст (от 8 лет)');
     }
-    if (password.length < 2) {
-      showPasswordError('Введите как минимум 3 симовола');
+    if (password.length < 8) {
+      showPasswordError('Введите как минимум 8 симовол с буквами');
     }
     if (PhoneFormatter.isOperatorValid(phone)) {
       showPhoneError('Такого оператора не существует');
@@ -187,9 +208,6 @@ class AuthorizationController extends BaseController {
     if (lastName.length < 2) {
       showLastNameError('Введите как минимум 3 симовола');
     }
-    if (timeOfSleep < 4) {
-      showHoursOfSleepError('Введенно не коректное число');
-    }
     if (!checkBoxBool) {
       showErrorCheckBox = true;
       notifyListeners();
@@ -198,7 +216,21 @@ class AuthorizationController extends BaseController {
     _isEmailValid(email);
 
     if (isAllValid()) {
-      onUpdated();
+      final user = User(
+        name: firstName,
+        surname: lastName,
+        email: email,
+        phone: phone,
+        password: password,
+        gender: genderIsMale ? 'male' : 'female',
+        age: int.tryParse(age) ?? 0,
+        sleepingModeId: sleepModes[currentSleepMode].id ?? 0,
+        lifeStyleId: activities[currentActivity].id ?? 0,
+      );
+      execute<void>(_registrationUserUseCase.registrationUser(user),
+          onSuccess: (_) {
+        onSuccess();
+      });
     }
   }
 
@@ -220,6 +252,11 @@ class AuthorizationController extends BaseController {
 
   void changeCurrentActivity(int newActivity) {
     currentActivity = newActivity;
+    notifyListeners();
+  }
+
+  void changeSleepMode(int sleepMode) {
+    currentSleepMode = sleepMode;
     notifyListeners();
   }
 }

@@ -3,11 +3,6 @@ import 'package:dio/dio.dart';
 import 'network_errors.dart';
 
 class NetworkService {
-  static const _httpMethodPost = 'POST';
-
-  static const _data = 'data';
-  static const _errors = 'errors';
-
   late Dio _dio;
 
   NetworkService(
@@ -32,37 +27,46 @@ class NetworkService {
   }
 
   Future<T> request<T>(
-    dynamic data, {
+    String path,
+    HttpMethod method, {
+    dynamic data,
     Map<String, dynamic>? headers,
-    required T Function(Map<String, dynamic>) onParse,
+    Map<String, dynamic>? queryParameters,
+    required T Function(Response<dynamic>) onParse,
   }) async {
     try {
-      final options = Options(method: _httpMethodPost);
+      final options = Options(method: method.name,headers: headers);
       if (headers != null) options.headers?.addAll(headers);
-
       final response = await _dio.request<dynamic>(
-        '',
+        path,
         data: data,
+        queryParameters: queryParameters,
         options: options,
       );
-
-      if (response.data[_errors] != null) {
-        return Future.error(NetworkError.create(_createError(response)));
-      } else {
-        return onParse(response.data[_data] as Map<String, dynamic>);
-      }
+      return onParse(response);
     } on DioError catch (e) {
       return Future.error(NetworkError.create(e));
     } catch (e) {
       return Future.error(e);
     }
   }
+}
 
-  DioError _createError(Response<dynamic> response) {
-    return DioError(
-      requestOptions: response.requestOptions,
-      response: response,
-      error: response.data[_errors],
-    );
+enum HttpMethod { get, put, post, delete }
+
+extension _HttpMethodExtension on HttpMethod {
+  String get name {
+    switch (this) {
+      case HttpMethod.get:
+        return 'GET';
+      case HttpMethod.put:
+        return 'PUT';
+      case HttpMethod.post:
+        return 'POST';
+      case HttpMethod.delete:
+        return 'DELETE';
+      default:
+        throw "Http method '$name' isn't defined.";
+    }
   }
 }

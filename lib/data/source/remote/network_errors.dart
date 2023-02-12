@@ -24,9 +24,6 @@ class NetworkError extends Error {
       return ConnectionError();
     } else if (error.response?.statusCode == HttpStatus.unauthorized) {
       return UnauthorizedError();
-    } else if (error.error is List<dynamic>) {
-      final errorData = error.error.first as Map<String, dynamic>;
-      return RequestError(_RequestErrorData.fromMap(errorData), error.error);
     } else {
       final response = error.response;
       final request = error.requestOptions;
@@ -50,42 +47,3 @@ class NetworkError extends Error {
 class ConnectionError extends NetworkError {}
 
 class UnauthorizedError extends NetworkError {}
-
-class RequestError extends NetworkError {
-  final _RequestErrorData _error;
-
-  String? get category => _error.category;
-
-  RequestError(
-    this._error,
-    dynamic responseData,
-  ) : super(
-          message: _error.message,
-          path: _error.path?.first,
-          responseData: responseData,
-        );
-}
-
-class _RequestErrorData {
-  static const _paramMessage = 'message';
-  static const _paramCategory = 'category';
-  static const _paramPath = 'path';
-
-  final String message;
-  final String? category;
-  final List<String>? path;
-
-  const _RequestErrorData._({
-    required this.message,
-    this.category,
-    this.path,
-  });
-
-  factory _RequestErrorData.fromMap(Map<String, dynamic> data) {
-    return _RequestErrorData._(
-      message: data[_paramMessage] as String,
-      category: data[_paramCategory] as String?,
-      path: (data[_paramPath] as List<dynamic>?)?.cast<String>(),
-    );
-  }
-}

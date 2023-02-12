@@ -4,9 +4,12 @@ import 'package:sleep_care/presentation/screen/statistics/statistics_layout.dart
 
 class StatisticsScreen
     extends BaseScreen<StatisticsController, StatisticsLayout> {
+  final String locale;
+
+  StatisticsScreen(this.locale);
   @override
   StatisticsController get controller => StatisticsController();
 
   @override
-  StatisticsLayout get layout => StatisticsLayout();
+  StatisticsLayout get layout => StatisticsLayout(locale);
 }

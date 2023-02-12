@@ -151,6 +151,30 @@ class Styles {
     fontSize: 24.0,
   );
 
+  static const s28SapphireW700 = TextStyle(
+    color: Palette.sapphire,
+    fontWeight: FontWeight.w700,
+    fontSize: 28.0,
+  );
+
+  static const s28SapphireW400 = TextStyle(
+    color: Palette.sapphire,
+    fontWeight: FontWeight.w400,
+    fontSize: 28.0,
+  );
+
+  static const s38CobaltW500 = TextStyle(
+    color: Palette.cobalt,
+    fontWeight: FontWeight.w500,
+    fontSize: 38.0,
+  );
+
+  static const s38SapphireW500 = TextStyle(
+    color: Palette.sapphire,
+    fontWeight: FontWeight.w500,
+    fontSize: 38.0,
+  );
+
   static const s24CharcoalW600 = TextStyle(
     color: Palette.charcoal,
     fontWeight: FontWeight.w600,
@@ -325,6 +349,12 @@ class Styles {
     fontSize: 32.0,
   );
 
+  static const s32CobaltW700 = TextStyle(
+    color: Palette.cobalt,
+    fontWeight: FontWeight.w700,
+    fontSize: 32.0,
+  );
+
   static const s32SapphireW500 = TextStyle(
     color: Palette.sapphire,
     fontWeight: FontWeight.w500,
@@ -375,7 +405,7 @@ class Styles {
     ),
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(
-        color: Palette.mayaBlue,
+        color: Palette.greySuit,
         width: 2.0,
       ),
       borderRadius: BorderRadius.all(Radius.circular(12.0)),

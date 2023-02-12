@@ -8,6 +8,7 @@ import 'package:sleep_care/common/util/locale_manager.dart';
 import 'package:sleep_care/common/util/url_launcher.dart';
 import 'package:sleep_care/domain/controller/home_controller.dart';
 import 'package:sleep_care/presentation/screen/about_us/about_us_screen.dart';
+import 'package:sleep_care/presentation/screen/accout/accout_screen.dart';
 import 'package:sleep_care/presentation/screen/rating/rating_screen.dart';
 import 'package:sleep_care/presentation/screen/statistics/statistics_screen.dart';
 import 'package:sleep_care/presentation/widget/default_app_bar.dart';
@@ -77,9 +78,9 @@ class _HomeLayoutState extends BaseLayoutState<HomeController, HomeLayout>
         index: controller.currentIndex,
         children: [
           AboutUsScreen(),
-          StatisticsScreen(),
+          StatisticsScreen(controller.locale),
           RatingScreen(),
-          Center(child: Text('${controller.currentIndex}')),
+          AccountLScreen(),
         ],
       ),
       bottomNavigationBar: SizedBox(
@@ -97,8 +98,9 @@ class _HomeLayoutState extends BaseLayoutState<HomeController, HomeLayout>
                   padding: EdgeInsets.symmetric(horizontal: 20.0),
                   child: Text(
                     'Uk',
-                    style: getStyle(LocaleManager.ukrainianLanguageCode ==
-                        controller.locale),
+                    style: getStyle(
+                      LocaleManager.ukrainianLanguageCode == controller.locale,
+                    ),
                   ),
                 ),
               ),

@@ -1,10 +1,8 @@
 class Api {
   Api._();
 
-  static const prodEndpoint = 'https://mhp.m2.branderstudio.com/graphql';
-  static const stageEndpoint = 'https://mhp.m2.branderstudio.com/graphql';
+  static const prodEndpoint = 'http://127.0.0.1:8000/';
+  static const stageEndpoint = 'http://127.0.0.1:8000/';
 
   static const headerAuthorization = 'Authorization';
-  static const headerAuthorizationSecret = 'Authorization-Secret';
-  static const headerLanguage = 'Store';
 }

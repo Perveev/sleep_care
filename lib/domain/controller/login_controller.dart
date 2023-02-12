@@ -1,13 +1,18 @@
 import 'package:sleep_care/common/base/base_controller.dart';
+import 'package:sleep_care/data/use_case/login_user_use_case.dart';
 
 class LoginController extends BaseController {
   static const _emailRegex = r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$';
+
+  final LoginUserUseCase _loginUserUseCase;
 
   bool showErrorCheckBox = false;
   bool checkBoxBool = false;
 
   String? emailError;
   String? passwordError;
+
+  LoginController(this._loginUserUseCase);
 
   void showEmailError(String errorText) {
     if (emailError == null) {
@@ -56,14 +61,10 @@ class LoginController extends BaseController {
     return emailError == null;
   }
 
-  void tryRegistration({
-    required String lastName,
-    required String firstName,
-    required String age,
+  void tryLogin({
     required String password,
-    required String phone,
     required String email,
-    required void Function() onUpdated,
+    required void Function() onSuccess,
   }) {
     if (password.length < 2) {
       showPasswordError('Введите как минимум 3 симовола');
@@ -74,10 +75,13 @@ class LoginController extends BaseController {
       notifyListeners();
     }
 
-    _isEmailValid(email);
-
     if (isAllValid()) {
-      onUpdated();
+      execute<void>(
+        _loginUserUseCase.login(email, password),
+        onSuccess: (_) {
+          onSuccess();
+        },
+      );
     }
   }
 }

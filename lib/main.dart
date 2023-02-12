@@ -1,6 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sleep_care/core/di/dependency_provider.dart';
+import 'package:sleep_care/presentation/screen/admin_panel/admin_panel_screen.dart';
 import 'package:sleep_care/presentation/screen/authorization/authorization_screen.dart';
+import 'package:sleep_care/presentation/screen/home/home_screen.dart';
+import 'package:sleep_care/presentation/screen/rating/rating_screen.dart';
+import 'package:sleep_care/presentation/screen/statistics/statistics_screen.dart';
 
 import 'common/resource/theme.dart';
 import 'common/util/locale_manager.dart';
@@ -8,6 +14,7 @@ import 'common/util/locale_manager.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  await setupDI(isDebug: kDebugMode);
   runApp(
     EasyLocalization(
       path: LocaleManager.translationsPath,
@@ -32,22 +39,6 @@ class Application extends StatelessWidget {
       },
       theme: buildTheme(),
       home: AuthorizationScreen(),
-      // initialRoute: Routes.home,
-      // onGenerateRoute: generateRoute,
     );
   }
-
-// String _initialRoute() {
-//   var initialRoute = Routes.intro;
-//   if (registrationStatus.isRegistrationCompleted) {
-//     initialRoute = Routes.home;
-//   } else if (registrationStatus.isInfoFilled) {
-//     initialRoute = Routes.meeting;
-//   } else if (registrationStatus.isAuthorized) {
-//     initialRoute = Routes.personInfo;
-//   } else if (registrationStatus.isTutorialViewed) {
-//     initialRoute = Routes.phoneInput;
-//   }
-//   return initialRoute;
-// }
 }

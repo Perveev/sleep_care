@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:sleep_care/common/resource/drawables.dart';
 import 'package:sleep_care/common/resource/palette.dart';
 import 'package:sleep_care/common/resource/styles.dart';
+import 'package:sleep_care/common/util/dimension_manager.dart';
 import 'package:sleep_care/common/util/input_formatter_factory.dart';
 import 'package:sleep_care/common/util/mask_input_formatter.dart';
-import 'package:sleep_care/presentation/screen/home/home_screen.dart';
+import 'package:sleep_care/presentation/screen/login/login_screen.dart';
 import 'package:sleep_care/presentation/widget/border_action_button.dart';
 import 'package:sleep_care/presentation/widget/rounded_button.dart';
 
@@ -35,6 +35,9 @@ class _AuthorizationLayoutState
     mask: InputFormatterFactory.phoneMask,
   );
   static const _phoneInputHint = '+38 (_ _ _)  _ _ _  _ _  _ _';
+
+  @override
+  void onInit() => controller.loadData();
 
   @override
   Widget buildLayout(BuildContext context) {
@@ -88,7 +91,9 @@ class _AuthorizationLayoutState
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 140.0, vertical: 16.0),
+                    horizontal: 140.0,
+                    vertical: 16.0,
+                  ),
                   child: TextField(
                     controller: ageController,
                     style: Styles.s14CharcoalW500,
@@ -155,24 +160,6 @@ class _AuthorizationLayoutState
                     },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 140.0,
-                    vertical: 16.0,
-                  ),
-                  child: TextField(
-                    onTap: _pickDates,
-                    readOnly: true,
-                    keyboardType: TextInputType.none,
-                    controller: timeSleepController,
-                    style: Styles.s14CharcoalW500,
-                    decoration: Styles.roundInputBoxDecoration.copyWith(
-                      hintText: 'Hours of sleep',
-                      errorText: controller.hourOfSleepError,
-                    ),
-                    onChanged: (text) => controller.hideHoursOfSleepError(),
-                  ),
-                ),
                 const SizedBox(height: 32),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 220.0),
@@ -218,8 +205,33 @@ class _AuthorizationLayoutState
                         child: GestureDetector(
                           onTap: () => controller.changeCurrentActivity(index),
                           child: LifeStyleItem(
-                            text: controller.activities[index],
+                            text: controller.activities[index].title,
                             isActive: controller.currentActivity == index,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 140.0,
+                    vertical: 16.0,
+                  ),
+                  child: SizedBox(
+                    height: 43.0,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: controller.sleepModes.length,
+                      shrinkWrap: true,
+                      itemBuilder: (_, index) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: GestureDetector(
+                          onTap: () => controller.changeSleepMode(index),
+                          child: LifeStyleItem(
+                            text:
+                                '${controller.sleepModes[index].sleepInterval.toStringAsFixed(0)} hours',
+                            isActive: controller.currentSleepMode == index,
                           ),
                         ),
                       ),
@@ -271,11 +283,11 @@ class _AuthorizationLayoutState
                         password: passwordController.text,
                         phone: phoneController.text,
                         email: emailController.text,
-                        onUpdated: () {
+                        onSuccess: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => HomeScreen(),
+                              builder: (context) => LoginScreen(),
                             ),
                           );
                         },
@@ -289,21 +301,6 @@ class _AuthorizationLayoutState
         ],
       ),
     );
-  }
-
-  Future<void> _pickDates() async {
-    FocusScope.of(context).unfocus();
-    final newTime = await showTimePicker(
-      context: context,
-      initialTime: const TimeOfDay(hour: 0, minute: 0),
-    );
-    if (newTime != null) {
-      // controller
-      controller.hideHoursOfSleepError();
-      controller.timeOfSleep = newTime.hour;
-      timeSleepController.text =
-          "${newTime.hour} hours ${newTime.minute} minutes";
-    }
   }
 }
 
@@ -342,7 +339,7 @@ class LoginTile extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
                 );
               },
               text: 'Sign in',
@@ -350,7 +347,7 @@ class LoginTile extends StatelessWidget {
               borderColor: Palette.white,
               style: Styles.s24WhiteW400,
             ),
-            const SizedBox(height: 650.0),
+            SizedBox(height: DimensionManager.getHeight(context)),
           ],
         ),
       ),

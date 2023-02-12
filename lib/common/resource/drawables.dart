@@ -43,7 +43,7 @@ class Drawables {
   static const info = 'info';
   static const git = 'git';
   static const telegram = 'telegram';
-  static const smile = 'smile';
+  static const smile = 'smiling';
   static const sad = 'sad';
   static const takoe = 'takoe';
   static const star = 'star';
